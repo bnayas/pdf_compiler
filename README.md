@@ -130,12 +130,36 @@ curl -X POST http://localhost:8080/convert \
 ## Docker Image Details
 
 - **Base Image**: `python:3.12-slim` (~150MB)
-- **LaTeX Compiler**: Tectonic v0.14.1 (~50MB)
+- **LaTeX Compiler**: Tectonic v0.15.0 (~50MB)
 - **Total Image Size**: ~200-300MB
 
 The image uses Tectonic, a modern Rust-based LaTeX engine that's much smaller than traditional TeX Live distributions while maintaining compatibility.
 
 ## License
 
-MIT
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
+
+### GPL v3 Summary
+
+The GNU General Public License is a free, copyleft license that allows you to:
+
+- **Use** the software for any purpose
+- **Modify** the software to suit your needs
+- **Distribute** the software and your modifications
+- **Share** the source code
+
+**Important**: If you distribute this software (modified or unmodified), you must:
+- Include the original copyright notice
+- Include a copy of the GPL v3 license
+- Make the source code available under the same GPL v3 license
+- Document any changes you made
+
+### Full License Text
+
+See the [LICENSE](LICENSE) file in this repository for the complete GPL v3 license text.
+
+### More Information
+
+- [GNU GPL v3 Official Page](https://www.gnu.org/licenses/gpl-3.0.html)
+- [GPL v3 FAQ](https://www.gnu.org/licenses/gpl-faq.html)
 
