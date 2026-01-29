@@ -1,0 +1,49 @@
+{
+  "topic_title": "Introduction to Calculus: Limits",
+  "theory_content": "A limit describes the value that a function approaches as the input approaches some value. Limits are essential to calculus and are used to define continuity, derivatives, and integrals.\n\nFormal Definition:\nThe limit of f(x) as x approaches a is L, written as:\n  lim(x→a) f(x) = L\n\nif for every ε > 0, there exists a δ > 0 such that:\n  0 < |x - a| < δ implies |f(x) - L| < ε\n\nKey Properties:\n1. Sum Rule: lim[f(x) + g(x)] = lim f(x) + lim g(x)\n2. Product Rule: lim[f(x) · g(x)] = lim f(x) · lim g(x)\n3. Quotient Rule: lim[f(x) / g(x)] = lim f(x) / lim g(x), provided lim g(x) ≠ 0",
+  "exercises": [
+    {
+      "question": "Evaluate: lim(x→2) (x² + 3x - 10) / (x - 2)",
+      "difficulty": "Easy",
+      "hints": [
+        "Factor the numerator",
+        "Look for common factors with the denominator",
+        "Simplify before substituting"
+      ]
+    },
+    {
+      "question": "Find: lim(x→0) sin(x) / x",
+      "difficulty": "Medium",
+      "hints": [
+        "This is a fundamental trigonometric limit",
+        "Consider using L'Hôpital's rule or the squeeze theorem",
+        "The answer is a well-known constant"
+      ]
+    },
+    {
+      "question": "Determine if the following limit exists, and if so, find its value:\nlim(x→1) (√x - 1) / (x - 1)",
+      "difficulty": "Medium",
+      "hints": [
+        "Multiply numerator and denominator by the conjugate",
+        "Rationalize the numerator"
+      ]
+    },
+    {
+      "question": "Evaluate: lim(x→∞) (3x² + 2x - 1) / (x² - 4x + 7)",
+      "difficulty": "Hard",
+      "hints": [
+        "Divide both numerator and denominator by the highest power of x",
+        "Remember that 1/x → 0 as x → ∞"
+      ]
+    },
+    {
+      "question": "Using the ε-δ definition of a limit, prove that:\nlim(x→3) (2x + 1) = 7",
+      "difficulty": "Hard",
+      "hints": [
+        "Start by assuming ε > 0 is given",
+        "Find δ in terms of ε such that |x - 3| < δ implies |(2x + 1) - 7| < ε",
+        "Simplify |(2x + 1) - 7| to |2x - 6| = 2|x - 3|"
+      ]
+    }
+  ]
+}

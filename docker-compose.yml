@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  pdf-compiler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdf-compiler
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - API_SECRET=${API_SECRET:-default_secret}
+      - MAX_EXERCISES=50
+      - MAX_CONTENT_LENGTH=1048576
+      - DEBUG=false
+    volumes:
+      # Mount example file for easy testing
+      - ./example_lesson.json:/app/example_lesson.json:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
