@@ -14,8 +14,9 @@ from flask import Flask, request, send_file, jsonify
 from werkzeug.exceptions import BadRequest
 
 # Configure logging
+log_level = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(
-    level=logging.INFO,
+    level=getattr(logging, log_level, logging.INFO),
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
@@ -28,6 +29,10 @@ MAX_EXERCISES = int(os.getenv("MAX_EXERCISES", "50"))
 MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", "1048576"))  # 1MB default
 
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
+
+# Debug: Log API_SECRET at startup (masked for security)
+logger.info(f"API_SECRET loaded: {'*' * (len(API_SECRET) - 4) + API_SECRET[-4:] if len(API_SECRET) > 4 else '****'}")
+logger.info(f"API_SECRET length: {len(API_SECRET)}")
 
 
 def escape_latex(text: str) -> str:
@@ -332,8 +337,18 @@ def convert_to_pdf():
     """
     # Verify authentication
     auth_header = request.headers.get('Authorization')
-    if auth_header != f"Bearer {API_SECRET}":
-        logger.warning("Unauthorized access attempt")
+    expected_auth = f"Bearer {API_SECRET}"
+    
+    # Debug logging
+    logger.debug(f"Received Authorization header: {auth_header[:20]}..." if auth_header and len(auth_header) > 20 else f"Received Authorization header: {auth_header}")
+    logger.debug(f"Expected Authorization header: {expected_auth[:20]}..." if len(expected_auth) > 20 else f"Expected Authorization header: {expected_auth}")
+    logger.debug(f"Header length: {len(auth_header) if auth_header else 0}, Expected length: {len(expected_auth)}")
+    logger.debug(f"Headers match: {auth_header == expected_auth}")
+    
+    if auth_header != expected_auth:
+        logger.warning(f"Unauthorized access attempt - Header mismatch")
+        logger.warning(f"Received: '{auth_header}'")
+        logger.warning(f"Expected: '{expected_auth}'")
         return jsonify({"error": "Unauthorized"}), 401
     
     # Parse and validate input
