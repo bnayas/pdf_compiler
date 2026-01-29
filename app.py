@@ -340,15 +340,12 @@ def convert_to_pdf():
     expected_auth = f"Bearer {API_SECRET}"
     
     # Debug logging
-    logger.debug(f"Received Authorization header: {auth_header[:20]}..." if auth_header and len(auth_header) > 20 else f"Received Authorization header: {auth_header}")
-    logger.debug(f"Expected Authorization header: {expected_auth[:20]}..." if len(expected_auth) > 20 else f"Expected Authorization header: {expected_auth}")
     logger.debug(f"Header length: {len(auth_header) if auth_header else 0}, Expected length: {len(expected_auth)}")
     logger.debug(f"Headers match: {auth_header == expected_auth}")
     
     if auth_header != expected_auth:
         logger.warning(f"Unauthorized access attempt - Header mismatch")
         logger.warning(f"Received: '{auth_header}'")
-        logger.warning(f"Expected: '{expected_auth}'")
         return jsonify({"error": "Unauthorized"}), 401
     
     # Parse and validate input
