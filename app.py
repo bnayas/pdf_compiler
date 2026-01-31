@@ -401,6 +401,69 @@ def convert_to_pdf():
         return jsonify({"error": "Internal server error"}), 500
 
 
+@app.route('/convert/tex', methods=['POST'])
+def convert_tex_to_pdf():
+    """
+    Convert raw LaTeX content to PDF.
+    
+    Expected Body: Raw LaTeX string
+    Content-Type: text/plain
+    
+    Returns:
+        PDF file or error response
+    """
+    # Verify authentication
+    auth_header = request.headers.get('Authorization')
+    expected_auth = f"Bearer {API_SECRET}"
+    
+    if auth_header != expected_auth:
+        logger.warning(f"Unauthorized access attempt to /convert/tex")
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    # Get raw content
+    try:
+        if request.content_type and 'text/plain' not in request.content_type:
+             # Be lenient, but ideally it should be text/plain
+             pass
+
+        latex_source = request.get_data(as_text=True)
+        
+        if not latex_source or len(latex_source.strip()) == 0:
+            return jsonify({"error": "Empty LaTeX content"}), 400
+            
+        logger.info(f"Received raw LaTeX document ({len(latex_source)} bytes)")
+        
+        # Compile
+        pdf_bytes = compile_latex_to_pdf(latex_source)
+        logger.info(f"Compiled PDF ({len(pdf_bytes)} bytes)")
+        
+        # Create temporary file for response
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp:
+            tmp.write(pdf_bytes)
+            tmp_path = tmp.name
+        
+        try:
+            return send_file(
+                tmp_path,
+                mimetype='application/pdf',
+                as_attachment=True,
+                download_name='lesson.pdf'
+            )
+        finally:
+            # Clean up temporary file
+            try:
+                os.unlink(tmp_path)
+            except Exception as e:
+                logger.warning(f"Failed to delete temp file: {e}")
+        
+    except RuntimeError as e:
+        logger.error(f"Compilation error: {e}")
+        return jsonify({"error": "PDF compilation failed", "details": str(e)}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}", exc_info=True)
+        return jsonify({"error": "Internal server error"}), 500
+
+
 @app.errorhandler(413)
 def request_entity_too_large(error):
     """Handle request size limit exceeded."""
